@@ -58,7 +58,7 @@ int is_mmx(void) {
 }
 
 
-unsigned char g_blendtable[256][256];
+unsigned char g_blendtable[256][256]; //  (i*j)/255.0 lookup table. used in blending
 unsigned int const mmx_blend4_revn[2]={0xff00ff,0xff00ff};//{0x1000100,0x1000100}; <<- this is actually more correct, but we're going for consistency vs. the non-mmx ver-jf
 int const mmx_blendadj_mask[2] = { 0xff00ff,0xff00ff};
 int const mmx_blend4_zero=0;

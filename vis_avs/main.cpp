@@ -51,7 +51,7 @@ int (*vuGetVisData)(char *vdata, int size);
 
 extern void GetClientRect_adj(HWND hwnd, RECT *r);
 
-static unsigned char g_logtab[256];
+static unsigned char g_logtab[256]; // log function lookup table
 HINSTANCE g_hInstance;
 
 char *verstr=
@@ -75,7 +75,7 @@ volatile int g_ThreadQuit;
 
 static CRITICAL_SECTION g_cs;
 
-static unsigned char g_visdata[2][2][576];
+static unsigned char g_visdata[2][2][576]; // stores visualization data [spectrum/waveform][channel][samples]
 static int g_visdata_pstat;
 
 static winampVisModule *getModule(int which);
@@ -88,6 +88,11 @@ extern "C" {
 	}
 }
 
+/**
+ * Plugin entry point? Returns a struct containing
+ * function pointers to plugin operations and other meta
+ * info
+ */
 static winampVisModule *getModule(int which)
 {
 	static winampVisModule mod =
@@ -218,11 +223,14 @@ static int init(struct winampVisModule *this_mod)
 	g_ThreadQuit=0;
 	g_visdata_pstat=1;
 
-  AVS_EEL_IF_init();
+	// Expression evaluator init
+	AVS_EEL_IF_init();
 
+	// UI init
 	if (Wnd_Init(this_mod)) return 1;
 
 	{
+		// init the log lookup table. base 60??
 		int x;
 		for (x = 0; x < 256; x ++)
 		{
@@ -234,18 +242,21 @@ static int init(struct winampVisModule *this_mod)
 		}
 	}
 
-  initBpm();
+	// init bpm refiner
+	initBpm();
 
+	// init the rendering
 	Render_Init(g_hInstance);
 
+	//create the editor window
 	CfgWnd_Create(this_mod);
 
 	g_hThread=(HANDLE)_beginthreadex(NULL,0,RenderThread,0,0,(unsigned int *)&id);
-  main_setRenderThreadPriority();
-  SetForegroundWindow(g_hwnd);
-  SetFocus(g_hwnd);
+	main_setRenderThreadPriority();
+	SetForegroundWindow(g_hwnd);
+	SetFocus(g_hwnd);
 
-  return 0;
+	return 0;
 }
 
 static int render(struct winampVisModule *this_mod)
@@ -258,6 +269,8 @@ static int render(struct winampVisModule *this_mod)
 		LeaveCriticalSection(&g_cs);
 		return 1;
 	}
+
+	// put spectrum data in log scale
 	if (g_visdata_pstat)
 		for (x = 0; x<  576*2; x ++)
 			g_visdata[0][0][x]=g_logtab[(unsigned char)this_mod->spectrumData[0][x]];

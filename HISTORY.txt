@@ -1,74 +1,79 @@
+-francis:
+added floor(), ceil() and $Phi
+added "cancel fullscreen on deactivation" toggle option
 
-  LICENSE
-  -------
-Copyright 2005 Nullsoft, Inc.
-All rights reserved.
+-mig:
+added example infrastructure to dmove.  :)
+now there are 8 examples in dmove.  also tuned up my beat-interpolation algos!  woo!
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+-justin
+added blend modes to misc / buffer save
+made config expand trees by default
 
-  * Redistributions of source code must retain the above copyright notice,
-    this list of conditions and the following disclaimer. 
+-mig:
+started work on undo/redo system.
+infrastructure seems to work, but I can't figure out the magical
+  incantation to make the UI reflect the newly altered render list
+  although it seems to actually go back to the last values in the renderer.
+"Do you want to save?" dirty flag now contained (mostly) in the undo object.
+(In fact, it saves a dirty bit for every undo state, so you can undo twice,
+  save, then redo and you should have your dirty bit still set.  If you then
+  undo yet again, you're back to what you saved and you have no dirty bit)
+added more examples to SuperScope
 
-  * Redistributions in binary form must reproduce the above copyright notice,
-    this list of conditions and the following disclaimer in the documentation
-    and/or other materials provided with the distribution. 
+-justin:
+fixed memory leak in evallib stuff I made a bit back
+added debug window, moved register watch to it, added error listing
+added option for clear variables on recompile in debug window
+fixed bugs, too.
 
-  * Neither the name of Nullsoft nor the names of its contributors may be used to 
-    endorse or promote products derived from this software without specific prior written permission. 
- 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
-IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT 
-OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-
-Nullsoft Advanced Visualization Studio (AVS) v2.0a4 README
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-TODO: write readme here :)
-
-Thanks to Paul Holden for the FunkyFX Firewurx APE  
-
-Once you install this baby, fire up Winamp, open up the preferences 
-(CTRL+P), go to the Plugins/Visualization section, and select 
-Nullsoft AVS as the visualization plug-in. Hit start. 
-
-Once the AVS opens, it will probably be showing a nice black output.
-To get AVS to display something more interesting, hit space, or right
-click in the black area and select a preset to load.
-
-If you want to create your own presets, click the left mouse button in 
-the black area of the window to bring up the AVS Editor window.
-
-The editor lets you create new visuals by adding effects from your Effect
-Library (in the upper right) to the Active Effect list (on the left side).
-Once you've added effects, you can configure each effect by selecting them
-from the Active Effect list. You can also clear the list, or load or save
-the list to be loaded later as a preset. 
-
-You can also configure some of AVS's settings by selecting items from the 
-Settings section of the Editor. 
-
-Hotkeys for main window:
- *  Any winamp key
- *  R toggles randomswitching
- *  F toggles fullscreen framerate counter
- *  Y and U cycle through presets in order
- *  Space goes to random preset
- *  Enter toggles fullscreen
- *  0,1-9, F1-F10 load presets
- *  Ctrl+above save presets
-
-That's it for now, and enjoy!
+-justin:
+started adding setting for reinit on edit for evallib stuff
+made config change detection a little more accurate
+made superscope/dmove/shift/etc reinit on edit work right
+made trans / movement only replace usereval with preseteval if editted
+fyi: trans / movement also provides 'sw' and 'sh' for screen width and height,
+  so things like 'd=d*0.93 + (((x*sw/2)&(y*sh/2)&1)*-0.3);' are fun :)
+fixed trans / movement backwards compatible stuff (no crashy at least)
+updated eval documentation stuff, need people to write docs for it, too.. heheh
+lots of ui cleanups (more edit room!)
+fixed some fullscreen new fbresize bugs
+updated fullscreen overlay mode some
+updated maximum local variables to 256 from 64 
+added global registers [reg00,reg01,... reg99] for debug 
+  and effect synchronization (or inter-preset communication) 
+added global register watch in root list window (for debugging) 
+added comments for eval code. // and /* bla */ 
+updated eval documentation 
+added gettime() function to eval 
+made annoying grey rectangle below tree go away when you aren't docked 
+added new color modifier effect, which can be used to replace 
+  (with script) a lot of different effects (and be faster and more flexible). 
+added 'minimum blend' mode for effect lists/line drawing 
+added 'round up' option for Blur. 
+made a generic avs directory scanner routine for subdirs (yay!)
+   made it only generate menus when opened, for speed
+made effects that use evallib reset variables to empty on recompile
+made avs track dirtiness of presets, and (optionally) prompt to save etc
+made avs resize images when resizing (optionally)
+added extended APE interface, that lets you access evallib, global registers,
+  line blend/width modes. (see apesdk.zip)
 
 
-Version history:
+
+
+- mig: made most of the presets in Trans/Movement show their algos in the edit field (so you can tune them yourself)
+       added multiple new algos to the preset list
+
+- mig: removed ability to RMB in fullscreen mode.  Bug 331 from the database.  want make new gui.  want make now.
+- basu: added 'onbeat enabled' option to lists
+- christophe: added thread priority settings (so you can set avs in idle prority while keeping winamp in
+  high prio.)
+2.0a7:
+- made better multimonitor support -- still needs more work (making it able to go fullscreen and you do other things
+2.0a6:
+- added 'skip first' in misc/custom bpm
+- added interferences effect
 2.0a4:
 - auto fullscreen window resizing
 2.0a3:
@@ -82,6 +87,7 @@ Version history:
 - added doublesize for windowed
 - added seperate opts for windowed/fullscreen for text
 - fixed bug in mosaic.
+
 2.0a1:
 - preinit of presets for better transitions
 - integrated laser support (built-time option)
@@ -115,6 +121,9 @@ Version history:
 1.0a53:
 - deadbeef: superscope effect
 			made it save to plugins\vis_avs.dat, instead.
+-lone :		added Trans / Invert
+			added Trans / Unique tone
+			added Render / Timescope
 
 a52:
 - deadbeef: optimized/simplified evallib. made it limited to 8 char variable names,
