@@ -9,11 +9,14 @@ This is a setup that can build the code. It could probably work with different v
 
 ## Build
 1. Open workspace vis_avs/vis_Avs.dsw
-2. Build vis_chavs.dll (F7). The link settings outputs the dll in the winamp plugins directory. Modify in project settings if required.
+2. Set Active build configuration to Win32 Release
+3. Build vis_chavs.dll (F7). The link settings outputs the dll directly to the winamp plugins directory. Modify in project settings if required.
 
 ## Debug
 1. Open workspace vis_avs/vis_Avs.dsw
-2. Start Debug (F5). The debug settings runs Winamp from default installation directory. Modify in project settings if required.
+2. Set Active build configuration to Win32 Debug
+3. Set winamp executable in project settings
+2. Start Debug (F5)
 
 ## Nullsoft Advanced Visualization Studio (AVS) v2.0a4 README
 
